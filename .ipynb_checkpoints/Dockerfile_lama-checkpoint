@@ -1,0 +1,9 @@
+FROM ollama/ollama
+
+WORKDIR /app
+# COPY venv /app/.env
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+EXPOSE 11434
+ENTRYPOINT ["/app/entrypoint.sh"]

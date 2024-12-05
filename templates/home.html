@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Page</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden; /* Prevents the whole page from scrolling */
+            font-family: Arial, sans-serif;
+        }
+        .header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            height: 90%; /* Adjusts to fill most of the screen height */
+            margin: 0;
+            padding: 5px;
+        }
+        .list-section {
+            width: 30%;
+            border: 2px solid #ccc;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%; /* Takes the full available height of the container */
+        }
+        .list-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .list-content {
+            flex-grow: 1;
+            border: 1px dashed #aaa;
+            padding: 10px;
+            overflow-y: auto; /* Allows vertical scrolling inside the field */
+            height: calc(100% - 50px); /* Fills most of the list-section height */
+            font-size: 14px;
+            resize: none; /* Prevents the textarea from being resized */
+        }
+        .submit-button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 14px;
+            cursor: pointer;
+            align-self: center; /* Centers the button horizontally */
+        }
+        .recipe-section {
+            width: 60%;
+            border: 2px solid #ccc;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%; /* Takes the full available height of the container */
+        }
+        .recipe-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .recipe-content {
+            flex-grow: 1;
+            border: 1px dashed #aaa;
+            padding: 10px;
+            overflow-y: auto; /* Allows vertical scrolling inside the field */
+            height: calc(100% - 50px); /* Fills most of the recipe-section height */
+            white-space: pre-wrap; /* Preserves whitespace for recipe display */
+        }
+        .arrow-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 5px;
+            margin-left: 10px;
+            height: 100%; /* Aligns buttons at the top and bottom */
+        }
+        .action-buttons .top-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .action-buttons .bottom-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        button {
+            padding: 5px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .arrow-button {
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+        }
+    </style>
+    <script>
+        async function submitIngredients() {
+            const listContent = document.getElementById('list').value;
+
+            if (!listContent) {
+                alert("Please enter some ingredients!");
+                return;
+            }
+
+            try {
+                const response = await fetch('/get_recipe', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ ingredients: listContent }),
+                });
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    alert(`Error: ${error.error}`);
+                    return;
+                }
+
+                const data = await response.json();
+                const recipeContent = document.getElementById('recipe');
+                recipeContent.textContent = data.recipe;
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred while generating the recipe.");
+            }
+        }
+    </script>
+</head>
+<body>
+    <!-- Page Header -->
+    <div class="header">Welcome to RecipIT</div>
+
+    <div class="container">
+        <!-- List Section -->
+        <div class="list-section">
+            <div class="list-title">List</div>
+            <textarea class="list-content" id="list" placeholder="Type your ingredients here..."></textarea>
+            <button class="submit-button" onclick="submitIngredients()">Submit</button>
+        </div>
+
+        <!-- Recipe Section -->
+        <div class="recipe-section">
+            <div class="recipe-title">Recipe</div>
+            <div class="recipe-content" id="recipe">
+                <!-- Recipe will be displayed here -->
+            </div>
+            <div class="arrow-buttons">
+                <button class="arrow-button">&larr;</button>
+                <button class="arrow-button">&rarr;</button>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <div class="top-buttons">
+                <button>Save</button>
+                <button onclick="window.location.href='/cookbook'">Open Cookbook</button>
+            </div>
+            <div class="bottom-buttons">
+                <button onclick="window.location.href='/about'">About</button>
+                <button>Contact</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CookBook - RecipIT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .recipes {
+            font-size: 16px;
+            line-height: 1.5;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        .recipe-item {
+            background-color: #f8f9fa;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .no-recipes {
+            color: #888;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Your CookBook</div>
+    <div class="recipes">
+        <!-- Placeholder for the saved recipes -->
+        <div class="no-recipes" id="no-recipes">No recipes saved yet.</div>
+        <ul id="recipe-list" style="list-style-type: none; padding: 0;">
+            <!-- Recipes will be dynamically added here -->
+        </ul>
+    </div>
+    <button class="back-button" onclick="window.location.href='/'">Back to Home</button>
+</body>
+</html>

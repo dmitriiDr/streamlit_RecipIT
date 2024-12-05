@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  streamlit_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8501:8501"
+    
+    networks:
+      - app_network
+    volumes:
+      - .:/app
+    environment:
+      DATABASE_URL: "postgresql://yourusername:yourpassword@db:5432/yourdatabase"
+
+    depends_on:
+      - llama_server
+      - db
+
+  llama_server:
+    build:
+      context: .
+      dockerfile: Dockerfile_lama
+    container_name: qwen_api_server
+    ports:
+      - "11434:11434"
+    volumes:
+      - .:/app/
+      - ./models:/root/.ollama/models
+    pull_policy: always
+    tty: true
+    restart: always
+    networks:
+      - app_network
+    entrypoint: /app/entrypoint.sh
+
+  db:
+    image: postgres:13
+    container_name: postgres_1
+    environment:
+      POSTGRES_USER: yourusername
+      POSTGRES_PASSWORD: yourpassword
+      POSTGRES_DB: yourdatabase
+    ports:
+      - "5432:5432"
+    networks:
+      - app_network
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+
+networks:
+  app_network:
+
+volumes:
+  postgres_data:
